@@ -45,7 +45,7 @@ def upload_file():
                 "content": [
                     {
                         "type": "text",
-                        "text": "This is a business card. Turn this data into a spreadsheet with headings labeling the fields (ex name, title, phone, email, company, department, address etc.)",
+                        "text": "This is a business card image. Extract the data and put it in JSON format: { 'Name': 'John Doe', 'Title': 'Software Engineer', 'Phone': '123-456-7890', 'Email': 'john.doe@example.com', 'Company': 'Google' }, convert this data into an HTML table.",
                     },
                     {
                         "type": "image_url",
