@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', function() {
         })
         .then(response => response.json())
         .then(data => {
-            // Assuming the server responds with JSON containing the HTML table
+            // Assuming the server responds with JSON data to insert into the table
             populateTable(data);
         })
         .catch(error => {
@@ -27,21 +27,16 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // Function to populate the table with data
 function populateTable(data) {
-    // Extract the message content from the API response
-    let content = data.choices[0].message.content;
+    const tableBody = document.getElementById('contactInfo').querySelector('tbody');
+    tableBody.innerHTML = ''; // Clear existing table data
 
-    // Use a regular expression to extract the HTML table from the content
-    let htmlTableMatch = content.match(/<table[\s\S]*<\/table>/);
-    let htmlTable = htmlTableMatch ? htmlTableMatch[0] : '';
-
-    // If an HTML table was found in the response, insert it into the web page
-    if (htmlTable) {
-        // Find the div container where the table should be displayed
-        const tableContainer = document.getElementById('table-container'); // Ensure you have this div in your HTML
-        // Set the innerHTML of the container to the HTML table
-        tableContainer.innerHTML = htmlTable;
-    } else {
-        // If no table was found, handle the error appropriately
-        console.error('No HTML table found in the API response');
-    }
+    // Loop through each item in the data array
+    data.forEach((item) => {
+        // Create a new row and cells for each piece of data
+        let row = tableBody.insertRow();
+        Object.values(item).forEach(text => {
+            let cell = row.insertCell();
+            cell.textContent = text;
+        });
+    });
 }
