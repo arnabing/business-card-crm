@@ -16,8 +16,8 @@ document.addEventListener('DOMContentLoaded', function() {
         })
         .then(response => response.json())
         .then(data => {
-            // Assuming the server responds with JSON data to insert into the table
-            populateTable(data);
+            console.log(data); // Log the data
+            displayHtmlTable(data.html_table); // Display the HTML table
         })
         .catch(error => {
             console.error('Error:', error);
@@ -25,18 +25,19 @@ document.addEventListener('DOMContentLoaded', function() {
     };
 });
 
-// Function to populate the table with data
-function populateTable(data) {
-    const tableBody = document.getElementById('contactInfo').querySelector('tbody');
-    tableBody.innerHTML = ''; // Clear existing table data
-
-    // Loop through each item in the data array
-    data.forEach((item) => {
-        // Create a new row and cells for each piece of data
-        let row = tableBody.insertRow();
-        Object.values(item).forEach(text => {
-            let cell = row.insertCell();
-            cell.textContent = text;
-        });
-    });
+// Function to display the HTML table
+function displayHtmlTable(htmlTable) {
+    const tableContainer = document.getElementById('table-container');
+    // Check if the htmlTable is not null or undefined
+    if (htmlTable) {
+        tableContainer.innerHTML = htmlTable; // Insert the HTML table
+        // Find the table within the container and add Bootstrap classes for styling
+        const table = tableContainer.querySelector('table');
+        if (table) {
+            table.classList.add('table', 'table-bordered'); // Apply Bootstrap table styles
+        }
+    } else {
+        // If htmlTable is null or undefined, show an error message or a default state
+        tableContainer.innerHTML = '<p>No table data available.</p>';
+    }
 }

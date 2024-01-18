@@ -2,6 +2,10 @@
 <html>
 <head>
     <title>Upload Business Card</title>
+    <!-- Include Bootstrap CSS for styling and responsiveness (optional but recommended) -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- Favicon -->
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}">
 </head>
 <body>
     <h1>Upload a Business Card Image</h1>
@@ -10,5 +14,14 @@
         <input type="file" name="file">
         <input type="submit" value="Upload">
     </form>
+
+    <!-- Div container where the table from the API response will be displayed -->
+    <div id="table-container" class="table-responsive">
+        <!-- The table will be inserted here by scripts.js -->
+    </div>
+
+    <!-- Include your JavaScript file -->
+    <script src="/static/scripts.js"></script>
+
 </body>
 </html>

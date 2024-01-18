@@ -4,6 +4,7 @@ from dotenv import load_dotenv
 import requests
 import base64
 import os
+import re
 
 app = Flask(__name__)
 
@@ -45,7 +46,7 @@ def upload_file():
                 "content": [
                     {
                         "type": "text",
-                        "text": "This is a business card image. Extract the data and put it in JSON format: { 'Name': 'John Doe', 'Title': 'Software Engineer', 'Phone': '123-456-7890', 'Email': 'john.doe@example.com', 'Company': 'Google' }, convert this data into an HTML table.",
+                        "text": "This is an image of a business card. Please extract the data from the image and format it as an HTML table. Include fields like Name, Title, Phone, Email, and Company in the table.",
                     },
                     {
                         "type": "image_url",
@@ -66,17 +67,29 @@ def upload_file():
     # Check the response status and return the appropriate result or error
     if response.status_code == 200:
         structured_data = response.json()
-        return jsonify(structured_data), 200
+        html_table = extract_html_table(structured_data)
+        if html_table:
+            return jsonify({"html_table": html_table}), 200
+        else:
+            # Log the error response from OpenAI API
+            print(f"Error in OpenAI API response: {
+                  response.status_code} - {response.text}")
+            return jsonify({"error": "No table found in AI response"}), 200
 
+# Function to extract HTML table from OpenAI API response
+
+
+def extract_html_table(api_response):
+    content = api_response["choices"][0]["message"]["content"]
+    print("API Response Content:", content)  # debugging
+    match = re.search(r"<table[^>]*>[\s\S]*?<\/table>", content)
+    if match:
+        return match.group(0)  # Found HTML table
     else:
-        # Log the error response from OpenAI API
-        print(f"Error in OpenAI API response: {
-            response.status_code} - {response.text}")
-        return jsonify({"error": "Error processing the image with OpenAI API"}), response.status_code
+        return None  # No table
 
 
 app.debug = True
 # Start the Flask app. Debug mode is on for development purposes.
-# Turn off debug mode when deploying to production for security reasons.
 if __name__ == '__main__':
     app.run(debug=True)
